@@ -23,6 +23,7 @@ return {
       --- Modules ---
 
       local resession = require 'resession'
+      local workspace = require 'custom.workspace'
 
       local pickers = require 'telescope.pickers'
       local finders = require 'telescope.finders'
@@ -152,15 +153,22 @@ return {
 
       --- Load a workspace ---
       local function load_workspace(name)
-        resession.load(name, {
-          dir = 'workspace',
-        })
+        --- notify plugins a workspace change is about to happen
+        require('custom.explorer').workspace_changing(function()
+          ----------------------------------------------------
+          resession.load(name, {
+            dir = 'workspace',
+          })
 
-        local root = workspace_root(name) or 'Unknown'
+          --- update global workspace information
+          local root = workspace_root(name)
+          workspace.set_root(root)
 
-        vim.notify(string.format('Loaded workspace "%s"\n\nRoot:\n%s', name, root), vim.log.levels.INFO, {
-          title = 'Workspace Load',
-        })
+          ----------------------------------------------------
+          vim.notify(string.format('Loaded workspace "%s"\n\nRoot:\n%s', name, root or 'Unknown'), vim.log.levels.INFO, {
+            title = 'Workspace Load',
+          })
+        end)
       end
 
       --- Workspace timestamp ---
@@ -477,15 +485,15 @@ return {
           end
 
           --- Keep the workspace attached ---
-          vim.schedule(
-            function()
-              resession.load(current, {
-                dir = 'workspace',
-                attach = true,
-                notify = false,
-              })
-            end
-          )
+          vim.schedule(function()
+            resession.load(current, {
+              dir = 'workspace',
+              attach = true,
+              notify = false,
+            })
+
+            workspace.set_root(new_root)
+          end)
 
           vim.notify(string.format('Workspace "%s"\n\nNew root:\n%s', current, new_root), vim.log.levels.INFO, { title = 'Workspace Relink' })
         end
@@ -567,7 +575,10 @@ return {
         workspace_picker('Delete Workspace', function(name)
           local current = get_current_workspace()
 
-          if current == name then resession.detach() end
+          if current == name then
+            workspace.clear()
+            resession.detach()
+          end
 
           resession.delete(name, {
             dir = 'workspace',
