@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -157,7 +157,8 @@ vim.o.inccommand = 'split'
 vim.o.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.o.scrolloff = 10
+-- Don't declare scrolloff here! Modify inside ./lua/custom/navigation.lua file instead.
+-- vim.o.scrolloff = 10
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
@@ -600,7 +601,65 @@ require('lazy').setup({
       --  See `:help lsp-config` for information about keys and how to configure
       ---@type table<string, vim.lsp.Config>
       local servers = {
-        -- clangd = {},
+        -- C/C++
+        clangd = {
+          cmd = {
+            'clangd',
+
+            '--background-index',
+            '--clang-tidy',
+
+            '--completion-style=detailed',
+            '--header-insertion=never',
+
+            '--query-driver=/Users/rudranchakraborty/Documents/02_Local_Projects/opt/riscv32/bin/riscv32-unknown-elf-*',
+          },
+        },
+        -- Python
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              analysis = {
+                typeCheckingMode = 'off',
+                diagnosticMode = 'openFilesOnly',
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                inlayHints = {
+                  variableTypes = false,
+                  functionReturnTypes = false,
+                },
+                diagnosticSeverityOverrides = {
+                  reportUnknownArgumentType = 'none',
+                  reportUnknownVariableType = 'none',
+                  reportUnknownMemberType = 'none',
+                  reportUnknownParameterType = 'none',
+                  reportMissingTypeArgument = 'none',
+                  reportUnusedCallResult = 'none',
+                  reportAny = 'none',
+                  reportMissingTypeStubs = 'none',
+                },
+              },
+            },
+          },
+        },
+        ruff = {
+          init_options = {
+            settings = {
+              -- Make line wrapping practically never happen.
+              lineLength = 300,
+              -- Continue to organize imports.
+              organizeImports = true,
+              -- Keep syntax errors enabled.
+              showSyntaxErrors = true,
+            },
+          },
+        },
+        -- Markdown
+        marksman = {},
+        -- VHDL
+        vhdl_ls = {},
+        -- Verilog/SystemVerilog
+        svlangserver = {},
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -816,7 +875,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'tokyonight-moon'
     end,
   },
 
@@ -875,7 +934,22 @@ require('lazy').setup({
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
       -- ensure basic parser are installed
-      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      local parsers = {
+        'bash',
+        'c',
+        'cpp',
+        'python',
+        'systemverilog',
+        'make',
+        'diff',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+      }
       require('nvim-treesitter').install(parsers)
 
       ---@param buf integer
@@ -940,7 +1014,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -967,6 +1041,8 @@ require('lazy').setup({
     },
   },
 })
+
+require 'custom.init'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
