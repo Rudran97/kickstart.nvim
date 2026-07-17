@@ -153,6 +153,26 @@ return {
 
       --- Load a workspace ---
       local function load_workspace(name)
+        --- Workspace contains unsaved files ---
+        local unsaved = get_unsaved_buffers()
+
+        if #unsaved > 0 then
+          local msg
+
+          if #unsaved == 1 then
+            msg = 'Cannot load new workspace.\n\n' .. 'Unsaved file:\n\n' .. '  • ' .. unsaved[1]
+          else
+            msg = string.format('Cannot load new workspace.\n\n%d unsaved files:\n\n', #unsaved)
+
+            for _, file in ipairs(unsaved) do
+              msg = msg .. '  • ' .. file .. '\n'
+            end
+          end
+
+          vim.notify(msg, vim.log.levels.WARN, { title = 'Workspace Load' })
+          return
+        end
+
         --- notify plugins a workspace change is about to happen
         require('custom.explorer').workspace_changing(function()
           ----------------------------------------------------
