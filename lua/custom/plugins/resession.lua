@@ -10,7 +10,7 @@ return {
 
     opts = {
       autosave = {
-        enabled = true,
+        enabled = false,
         interval = 60,
         notify = false,
       },
