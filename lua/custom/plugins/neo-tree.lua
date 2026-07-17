@@ -41,16 +41,6 @@ return {
       },
     },
 
-    config = function(_, opts)
-      require('neo-tree').setup(opts)
-      local explorer = require 'custom.explorer'
-
-      ----------------------------------------------------------------------
-      ------------------------------ Key Maps ------------------------------
-      ----------------------------------------------------------------------
-
-      vim.keymap.set('n', '<leader><Tab>', explorer.sidebar, { desc = 'Explorer Sidebar' })
-      vim.keymap.set('n', '<leader>e', explorer.float, { desc = 'Explorer Float' })
-    end,
+    config = function(_, opts) require('neo-tree').setup(opts) end,
   },
 }

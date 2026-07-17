@@ -53,9 +53,6 @@ return {
     config = function(_, opts)
       local oil = require 'oil'
       oil.setup(opts)
-
-      vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
-      vim.keymap.set('n', '<leader>o', function() oil.open_float() end, { desc = 'Oil (Floating)' })
     end,
   },
 }

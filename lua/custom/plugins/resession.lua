@@ -596,11 +596,11 @@ return {
       ------------------------------ Key Maps ------------------------------
       ----------------------------------------------------------------------
 
-      vim.keymap.set('n', '<leader>ws', save_workspace, { desc = '[W]orkspace [S]ave' })
-      vim.keymap.set('n', '<leader>wl', '<cmd>WorkspaceLoad<CR>', { desc = '[W]orkspace [L]oad' })
-      vim.keymap.set('n', '<leader>wd', '<cmd>WorkspaceDelete<CR>', { desc = '[W]orkspace [D]elete' })
-      vim.keymap.set('n', '<leader>wc', close_workspace, { desc = '[W]orkspace [C]lose' })
-      vim.keymap.set('n', '<leader>wr', '<cmd>WorkspaceRelink<CR>', { desc = '[W]orkspace [R]elink' })
+      -- vim.keymap.set('n', '<leader>ws', save_workspace, { desc = '[W]orkspace [S]ave' })
+      -- vim.keymap.set('n', '<leader>wl', '<cmd>WorkspaceLoad<CR>', { desc = '[W]orkspace [L]oad' })
+      -- vim.keymap.set('n', '<leader>wd', '<cmd>WorkspaceDelete<CR>', { desc = '[W]orkspace [D]elete' })
+      -- vim.keymap.set('n', '<leader>wc', close_workspace, { desc = '[W]orkspace [C]lose' })
+      -- vim.keymap.set('n', '<leader>wr', '<cmd>WorkspaceRelink<CR>', { desc = '[W]orkspace [R]elink' })
     end,
   },
 }
