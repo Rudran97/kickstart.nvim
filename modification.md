@@ -11,3 +11,5 @@ Features
 * Python development
 * Session management
 * Telescope integration
+* Git Integration
+* File explorer

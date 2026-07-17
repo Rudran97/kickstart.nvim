@@ -16,4 +16,27 @@ function M.close() run_in_root 'DiffviewClose' end
 function M.file_history() run_in_root 'DiffviewFileHistory %' end
 function M.repo_history() run_in_root 'DiffviewFileHistory' end
 
+function M.graph()
+  local root = M.root()
+
+  if root then vim.cmd('tcd ' .. vim.fn.fnameescape(root)) end
+
+  vim.cmd 'tabnew'
+
+  require('gitgraph').draw({}, {
+    all = true,
+    max_count = 5000,
+  })
+
+  vim.schedule(
+    function()
+      vim.keymap.set('n', 'q', '<cmd>tabclose<CR>', {
+        buffer = true,
+        silent = true,
+        desc = 'Close Git Graph',
+      })
+    end
+  )
+end
+
 return M
