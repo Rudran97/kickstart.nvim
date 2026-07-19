@@ -19,11 +19,14 @@ end
 
 ----------------------------------------------------------------------
 
+--- function to check if either the sidebar or the floating explorer is open ---
 function M.is_open()
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local buf = vim.api.nvim_win_get_buf(win)
+  for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
+      local buf = vim.api.nvim_win_get_buf(win)
 
-    if vim.bo[buf].filetype == 'neo-tree' then return true end
+      if vim.bo[buf].filetype == 'neo-tree' then return true end
+    end
   end
 
   return false
@@ -46,6 +49,22 @@ function M.sidebar()
   end
 
   backend_sidebar(M.root())
+end
+
+----------------------------------------------------------------------
+
+function M.focus()
+  local current_tab = vim.api.nvim_get_current_tabpage()
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(current_tab)) do
+    local buf = vim.api.nvim_win_get_buf(win)
+
+    if vim.bo[buf].filetype == 'neo-tree' then
+      vim.api.nvim_set_current_win(win)
+      return true
+    end
+  end
+
+  return false
 end
 
 ----------------------------------------------------------------------
