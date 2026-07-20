@@ -1,6 +1,7 @@
 local explorer = require 'custom.explorer'
 local oil = require 'custom.oil'
 local git = require 'custom.git'
+local diff = require 'custom.compare'
 
 ----------------------------------------------------------------------
 ------------------------------ Explorer ------------------------------
@@ -31,3 +32,4 @@ vim.keymap.set('n', '<leader>gh', git.file_history, { desc = 'File [H]istory' })
 vim.keymap.set('n', '<leader>gH', git.repo_history, { desc = 'Repository [H]istory' })
 vim.keymap.set('n', '<leader>gb', git.graph, { desc = 'View Git [G]raph' })
 vim.keymap.set('n', '<leader>gr', function() require('custom.git').select() end, { desc = 'Select [R]epository' })
+vim.keymap.set('n', '<leader>dc', '<cmd>CompareCurrentFile<CR>', { desc = '[D]iff [C]urrent File' })
