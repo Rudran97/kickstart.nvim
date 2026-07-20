@@ -183,6 +183,7 @@ return {
           --- update global workspace information
           local root = workspace_root(name)
           workspace.set_root(root)
+          require('custom.git').refresh()
 
           ----------------------------------------------------
           vim.notify(string.format('Loaded workspace "%s"\n\nRoot:\n%s', name, root or 'Unknown'), vim.log.levels.INFO, {
@@ -513,6 +514,7 @@ return {
             })
 
             workspace.set_root(new_root)
+            require('custom.git').refresh()
           end)
 
           vim.notify(string.format('Workspace "%s"\n\nNew root:\n%s', current, new_root), vim.log.levels.INFO, { title = 'Workspace Relink' })
