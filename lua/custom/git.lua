@@ -20,6 +20,7 @@ local ignored = {
   ['node_modules'] = true,
   ['.venv'] = true,
   ['venv'] = true,
+  ['.env'] = true,
   ['__pycache__'] = true,
 
   -- IDE / editor
@@ -59,10 +60,14 @@ local function scan(root)
     local git = dir .. '/.git'
 
     if uv.fs_stat(git) then
-      if dir ~= root then table.insert(results, {
-        name = vim.fs.basename(dir),
-        path = dir,
-      }) end
+      if dir ~= root then
+        table.insert(results, {
+          name = vim.fs.basename(dir),
+          path = dir,
+          kind = 'repository',
+          relative_path = vim.fs.relpath(root, dir) or '.',
+        })
+      end
     end
 
     local fs = uv.fs_scandir(dir)
@@ -82,6 +87,23 @@ local function scan(root)
   return results
 end
 
+--- process gitmodule file ---
+local function read_gitmodules(root)
+  local modules = {}
+
+  local file = root .. '/.gitmodules'
+
+  if vim.fn.filereadable(file) == 0 then return modules end
+
+  for _, line in ipairs(vim.fn.readfile(file)) do
+    local path = line:match '^%s*path%s*=%s*(.+)$'
+
+    if path then modules[path] = true end
+  end
+
+  return modules
+end
+
 --- refresh Git list ---
 function M.refresh()
   local root = M.workspace_root()
@@ -91,10 +113,15 @@ function M.refresh()
   table.insert(repositories, {
     name = vim.fs.basename(root),
     path = root,
+    kind = 'workspace',
+    relative_path = '.',
   })
+
+  local submodules = read_gitmodules(root)
 
   --- find nested repositories ---
   for _, repo in ipairs(scan(root)) do
+    if submodules[repo.relative_path] then repo.kind = 'submodule' end
     if repo.path ~= root then table.insert(repositories, repo) end
   end
 
@@ -143,7 +170,13 @@ function M.select()
         entry_maker = function(repo)
           return {
             value = repo,
-            display = string.format('%-20s %s', repo.name, repo.path),
+            display = string.format(
+              '%s%-30s (%-10s) %s',
+              repo == current_repo and '● ' or '  ',
+              repo.name,
+              repo.kind:gsub('^%l', string.upper),
+              repo.relative_path
+            ),
             ordinal = repo.name .. ' ' .. repo.path,
           }
         end,
