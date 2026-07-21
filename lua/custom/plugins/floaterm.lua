@@ -20,8 +20,12 @@ return {
       --   })
       -- end,
 
+      sidebar = function(buf)
+        vim.keymap.set('n', '<ESC>', function() require('floaterm').toggle() end, { buffer = buf })
+      end,
+
       term = function(buf)
-        -- Future custom terminal mappings go here.
+        vim.keymap.set('n', '<ESC>', function() require('floaterm').toggle() end, { buffer = buf })
       end,
     },
     terminals = {
