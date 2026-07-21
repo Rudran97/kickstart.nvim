@@ -2,6 +2,7 @@ local explorer = require 'custom.explorer'
 local oil = require 'custom.oil'
 local git = require 'custom.git'
 local preview = require 'custom.live-preview'
+local term = require 'custom.terminal'
 
 ----------------------------------------------------------------------
 ------------------------------ Explorer ------------------------------
@@ -41,3 +42,9 @@ vim.keymap.set('n', '<leader>dc', '<cmd>CompareCurrentFile<CR>', { desc = '[D]if
 vim.keymap.set('n', '<leader>mp', preview.preview, { desc = '[M]arkdown Live [P]review' })
 -- vim.keymap.set('n', '<leader>mc', preview.close, { desc = 'Close Live Preview' })
 vim.keymap.set('n', '<leader>mt', '<cmd>RenderMarkdown toggle<CR>', { desc = '[T]oggle Markdown Render' })
+
+----------------------------------------------------------------------
+-------------------------- Term Operations ---------------------------
+----------------------------------------------------------------------
+
+vim.keymap.set('n', '<leader>tt', term.toggle, { desc = '[T]oggle [T]erminal' })
