@@ -1,7 +1,7 @@
 local explorer = require 'custom.explorer'
 local oil = require 'custom.oil'
 local git = require 'custom.git'
-local diff = require 'custom.compare'
+local preview = require 'custom.live-preview'
 
 ----------------------------------------------------------------------
 ------------------------------ Explorer ------------------------------
@@ -32,4 +32,12 @@ vim.keymap.set('n', '<leader>gh', git.file_history, { desc = 'File [H]istory' })
 vim.keymap.set('n', '<leader>gH', git.repo_history, { desc = 'Repository [H]istory' })
 vim.keymap.set('n', '<leader>gb', git.graph, { desc = 'View Git [G]raph' })
 vim.keymap.set('n', '<leader>gr', function() require('custom.git').select() end, { desc = 'Select [R]epository' })
+
+----------------------------------------------------------------------
+-------------------------- File Operations ---------------------------
+----------------------------------------------------------------------
+
 vim.keymap.set('n', '<leader>dc', '<cmd>CompareCurrentFile<CR>', { desc = '[D]iff [C]urrent File' })
+vim.keymap.set('n', '<leader>mp', preview.preview, { desc = '[M]arkdown Live [P]review' })
+-- vim.keymap.set('n', '<leader>mc', preview.close, { desc = 'Close Live Preview' })
+vim.keymap.set('n', '<leader>mt', '<cmd>RenderMarkdown toggle<CR>', { desc = '[T]oggle Markdown Render' })
