@@ -659,7 +659,7 @@ require('lazy').setup({
         -- VHDL
         vhdl_ls = {},
         -- Verilog/SystemVerilog
-        svlangserver = {},
+        -- svlangserver = {},
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
