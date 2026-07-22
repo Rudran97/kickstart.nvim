@@ -38,7 +38,7 @@ vim.keymap.set('n', '<leader>gr', function() require('custom.git').select() end,
 -------------------------- File Operations ---------------------------
 ----------------------------------------------------------------------
 
-vim.keymap.set('n', '<leader>dc', '<cmd>CompareCurrentFile<CR>', { desc = '[D]iff [C]urrent File' })
+vim.keymap.set('n', '<leader>d=', '<cmd>CompareCurrentFile<CR>', { desc = '[D]iff [C]urrent File' })
 vim.keymap.set('n', '<leader>mp', preview.preview, { desc = '[M]arkdown Live [P]review' })
 -- vim.keymap.set('n', '<leader>mc', preview.close, { desc = 'Close Live Preview' })
 vim.keymap.set('n', '<leader>mt', '<cmd>RenderMarkdown toggle<CR>', { desc = '[T]oggle Markdown Render' })
