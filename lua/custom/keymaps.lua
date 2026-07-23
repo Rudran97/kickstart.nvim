@@ -3,6 +3,7 @@ local oil = require 'custom.oil'
 local git = require 'custom.git'
 local preview = require 'custom.live-preview'
 local term = require 'custom.terminal'
+local dbg = require 'custom.debugger'
 
 ----------------------------------------------------------------------
 ------------------------------ Explorer ------------------------------
@@ -48,3 +49,17 @@ vim.keymap.set('n', '<leader>mt', '<cmd>RenderMarkdown toggle<CR>', { desc = '[T
 ----------------------------------------------------------------------
 
 vim.keymap.set('n', '<leader>tt', term.toggle, { desc = '[T]oggle [T]erminal' })
+
+----------------------------------------------------------------------
+-------------------------- Debug Operations --------------------------
+----------------------------------------------------------------------
+
+vim.keymap.set('n', '<leader>dc', dbg.continue, { desc = 'Debug: Start/Continue' })
+vim.keymap.set('n', '<leader>ds', dbg.step_into, { desc = 'Debug: Step Into' })
+vim.keymap.set('n', '<leader>dn', dbg.step_over, { desc = 'Debug: Step Over' })
+vim.keymap.set('n', '<leader>do', dbg.step_out, { desc = 'Debug: Step Out' })
+vim.keymap.set('n', '<leader>db', dbg.toggle_breakpoint, { desc = 'Debug: Toggle Breakpoint' })
+vim.keymap.set('n', '<leader>dB', dbg.conditional_breakpoint, { desc = 'Debug: Conditional Breakpoint' })
+vim.keymap.set('n', '<leader>dd', dbg.toggle_ui, { desc = 'Debug: Toggle UI' })
+vim.keymap.set('n', '<leader>dP', dbg.select_program, { desc = 'Debug: Select Program' })
+vim.keymap.set('n', '<leader>dx', dbg.terminate, { desc = 'Debug: Terminate' })

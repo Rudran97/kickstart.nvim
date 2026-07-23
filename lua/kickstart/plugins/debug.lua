@@ -26,17 +26,17 @@ return {
     -- Add your own debuggers here
     -- 'leoluz/nvim-dap-go',
   },
-  keys = {
-    -- Basic debugging keymaps, feel free to change to your liking!
-    { '<leader>dc', function() require('dap').continue() end, desc = 'Debug: Start/Continue' },
-    { '<leader>ds', function() require('dap').step_into() end, desc = 'Debug: Step Into' },
-    { '<leader>dn', function() require('dap').step_over() end, desc = 'Debug: Step Over' },
-    { '<leader>do', function() require('dap').step_out() end, desc = 'Debug: Step Out' },
-    { '<leader>db', function() require('dap').toggle_breakpoint() end, desc = 'Debug: Toggle Breakpoint' },
-    { '<leader>dB', function() require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ') end, desc = 'Debug: Set Breakpoint' },
-    -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-    { '<leader>dd', function() require('dapui').toggle() end, desc = 'Debug: See last session result.' },
-  },
+  -- keys = {
+  --   -- Basic debugging keymaps, feel free to change to your liking!
+  --   { '<leader>dc', function() require('dap').continue() end, desc = 'Debug: Start/Continue' },
+  --   { '<leader>ds', function() require('dap').step_into() end, desc = 'Debug: Step Into' },
+  --   { '<leader>dn', function() require('dap').step_over() end, desc = 'Debug: Step Over' },
+  --   { '<leader>do', function() require('dap').step_out() end, desc = 'Debug: Step Out' },
+  --   { '<leader>db', function() require('dap').toggle_breakpoint() end, desc = 'Debug: Toggle Breakpoint' },
+  --   { '<leader>dB', function() require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ') end, desc = 'Debug: Set Breakpoint' },
+  --   -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+  --   { '<leader>dd', function() require('dapui').toggle() end, desc = 'Debug: See last session result.' },
+  -- },
   config = function()
     local dap = require 'dap'
 
@@ -63,39 +63,21 @@ return {
     ---
 
     --- configuration for C/C++ debugger ---
-    local last_program = nil
-
-    dap.adapters.gdb = {
-      type = 'executable',
-      command = 'gdb',
-      args = {
-        '--interpreter=dap',
-      },
-    }
+    local debugger = require 'custom.debugger'
 
     dap.configurations.cpp = {
       {
         name = 'Launch executable',
         type = 'gdb',
         request = 'launch',
-        program = function()
-          if last_program == nil then last_program = vim.fn.input('Executable: ', vim.fn.getcwd() .. '/', 'file') end
-          return last_program
-        end,
+
+        program = debugger.program,
+
         cwd = '${workspaceFolder}',
         stopAtBeginningOfMainSubprogram = false,
         args = {},
       },
     }
-
-    dap.configurations.c = dap.configurations.cpp
-
-    vim.keymap.set(
-      'n',
-      '<leader>dP',
-      function() last_program = vim.fn.input('Executable: ', vim.fn.getcwd() .. '/', 'file') end,
-      { desc = 'Debug: Select executable' }
-    )
     ---
 
     local dapui = require 'dapui'
@@ -167,9 +149,32 @@ return {
       end
     end
 
-    dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-    dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-    dap.listeners.before.event_exited['dapui_config'] = dapui.close
+    --- open debug environment in a new tab ---
+    local original_tab = nil
+    local debug_tab = nil
+
+    dap.listeners.after.event_initialized['dap_tab'] = function()
+      original_tab = vim.api.nvim_get_current_tabpage()
+
+      vim.cmd 'tabnew'
+
+      debug_tab = vim.api.nvim_get_current_tabpage()
+
+      dapui.open()
+    end
+    local function close_debug_session()
+      dapui.close()
+
+      if debug_tab and vim.api.nvim_tabpage_is_valid(debug_tab) then
+        vim.api.nvim_set_current_tabpage(debug_tab)
+        vim.cmd 'tabclose'
+      end
+
+      if original_tab and vim.api.nvim_tabpage_is_valid(original_tab) then vim.api.nvim_set_current_tabpage(original_tab) end
+    end
+
+    dap.listeners.before.event_terminated['dap_tab'] = close_debug_session
+    dap.listeners.before.event_exited['dap_tab'] = close_debug_session
     dap.listeners.before.event_terminated['dap_cleanup'] = cleanup_dap
     dap.listeners.before.event_exited['dap_cleanup'] = cleanup_dap
 
