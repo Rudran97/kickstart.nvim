@@ -22,63 +22,48 @@ return {
     -- Installs the debug adapters for you
     'mason-org/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
+    'mfussenegger/nvim-dap-python',
+    'theHamsta/nvim-dap-virtual-text',
 
     -- Add your own debuggers here
     -- 'leoluz/nvim-dap-go',
   },
-  -- keys = {
-  --   -- Basic debugging keymaps, feel free to change to your liking!
-  --   { '<leader>dc', function() require('dap').continue() end, desc = 'Debug: Start/Continue' },
-  --   { '<leader>ds', function() require('dap').step_into() end, desc = 'Debug: Step Into' },
-  --   { '<leader>dn', function() require('dap').step_over() end, desc = 'Debug: Step Over' },
-  --   { '<leader>do', function() require('dap').step_out() end, desc = 'Debug: Step Out' },
-  --   { '<leader>db', function() require('dap').toggle_breakpoint() end, desc = 'Debug: Toggle Breakpoint' },
-  --   { '<leader>dB', function() require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ') end, desc = 'Debug: Set Breakpoint' },
-  --   -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-  --   { '<leader>dd', function() require('dapui').toggle() end, desc = 'Debug: See last session result.' },
-  -- },
   config = function()
     local dap = require 'dap'
+    local dap_py = require 'dap-python'
+    local dap_virtual_text = require 'nvim-dap-virtual-text'
+    local python = require 'custom.python_debugger'
 
-    --- configuration for python debugger ---
-    dap.adapters.python = {
-      type = 'executable',
-      command = 'python3',
-      args = {
-        '-m',
-        'debugpy.adapter',
-      },
-    }
-
-    dap.configurations.python = {
-      {
-        type = 'python',
-        request = 'launch',
-        name = 'Launch current file',
-        program = '${file}',
-        console = 'integratedTerminal',
-        justMyCode = true,
-      },
-    }
-    ---
+    dap_py.setup 'python3'
+    dap_py.resolve_python = python.resolve_python
 
     --- configuration for C/C++ debugger ---
-    local debugger = require 'custom.debugger'
-
-    dap.configurations.cpp = {
-      {
-        name = 'Launch executable',
-        type = 'gdb',
-        request = 'launch',
-
-        program = debugger.program,
-
-        cwd = '${workspaceFolder}',
-        stopAtBeginningOfMainSubprogram = false,
-        args = {},
-      },
+    dap.adapters.codelldb = {
+      type = 'executable',
+      command = 'codelldb',
     }
-    ---
+
+    dap.adapters.gdb = {
+      type = 'executable',
+      command = 'gdb',
+      args = { '--interpreter=dap' },
+    }
+
+    dap_virtual_text.setup {
+      enabled = true,
+      enabled_commands = true,
+      highlight_changed_variables = true,
+      highlight_new_as_changed = true,
+      show_stop_reason = true,
+      commented = false,
+      only_first_definition = false,
+      all_references = false,
+      clear_on_continue = false,
+      virt_text_pos = 'inline',
+      all_frames = false,
+      virt_lines = false,
+      virt_text_win_col = nil,
+    }
 
     local dapui = require 'dapui'
 
@@ -89,7 +74,12 @@ return {
 
       -- You can provide additional configuration to the handlers,
       -- see mason-nvim-dap README for more information
-      handlers = {},
+      handlers = {
+        -- do not create handlers automatically
+        -- if handlers = {} then mason-nvim-dap creates default configurations
+        -- which could be broke. Better to configure it manually using dap.configuration.c/cpp/python
+        function() end,
+      },
 
       -- You'll need to check that you have the required things installed
       -- online, please don't ask me how to install them :)
@@ -177,14 +167,5 @@ return {
     dap.listeners.before.event_exited['dap_tab'] = close_debug_session
     dap.listeners.before.event_terminated['dap_cleanup'] = cleanup_dap
     dap.listeners.before.event_exited['dap_cleanup'] = cleanup_dap
-
-    -- Install golang specific config
-    -- require('dap-go').setup {
-    --   delve = {
-    --     -- On Windows delve must be run attached or it crashes.
-    --     -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
-    --     detached = vim.fn.has 'win32' == 0,
-    --   },
-    -- }
   end,
 }

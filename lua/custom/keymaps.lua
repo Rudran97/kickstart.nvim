@@ -63,3 +63,4 @@ vim.keymap.set('n', '<leader>dB', dbg.conditional_breakpoint, { desc = 'Debug: C
 vim.keymap.set('n', '<leader>dd', dbg.toggle_ui, { desc = 'Debug: Toggle UI' })
 vim.keymap.set('n', '<leader>dP', dbg.select_program, { desc = 'Debug: Select Program' })
 vim.keymap.set('n', '<leader>dx', dbg.terminate, { desc = 'Debug: Terminate' })
+vim.keymap.set('n', '<leader>dT', dbg.select_target, { desc = 'Debug: Select Target Debugger' })
