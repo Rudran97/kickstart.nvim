@@ -139,6 +139,14 @@ return {
       end
     end
 
+    --- cleanup target ---
+    local function cleanup_target()
+      local debugger = require 'custom.debugger'
+      local target = debugger.state.last_target
+
+      if target and target.cleanup then target.cleanup() end
+    end
+
     --- open debug environment in a new tab ---
     local original_tab = nil
     local debug_tab = nil
@@ -167,5 +175,7 @@ return {
     dap.listeners.before.event_exited['dap_tab'] = close_debug_session
     dap.listeners.before.event_terminated['dap_cleanup'] = cleanup_dap
     dap.listeners.before.event_exited['dap_cleanup'] = cleanup_dap
+    dap.listeners.after.event_terminated['target_cleanup'] = cleanup_target
+    dap.listeners.after.event_exited['target_cleanup'] = cleanup_target
   end,
 }

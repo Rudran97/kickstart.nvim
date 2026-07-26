@@ -5,9 +5,12 @@ local dapui = require 'dapui'
 local python = require 'custom.python_debugger'
 
 local last_executable = nil
-local last_target = nil
 
 M.targets = {}
+
+M.state = {
+  last_target = nil,
+}
 
 --- locate the debugger executables (gdb, lldb etc.) ---
 local function exepath(program)
@@ -20,6 +23,8 @@ M.targets = {
   {
     name = 'Native (LLDB)',
     path = exepath 'codelldb',
+    prepare = function() end,
+    cleanup = function() end,
     configuration = {
       name = 'Native (LLDB)',
       type = 'codelldb',
@@ -34,6 +39,8 @@ M.targets = {
   {
     name = 'Native (GDB)',
     path = exepath 'gdb',
+    prepare = function() end,
+    cleanup = function() end,
     configuration = {
       name = 'Native (GDB)',
       type = 'gdb',
@@ -48,6 +55,8 @@ M.targets = {
   {
     name = 'Python',
     path = python.current_interpreter,
+    prepare = function() end,
+    cleanup = function() end,
     configuration = function() return python.configuration() end,
     select_program = function() python.select_interpreter() end,
   },
@@ -69,7 +78,7 @@ local function select_target(callback)
         results = M.targets,
         entry_maker = function(target)
           local marker = ' '
-          if last_target == target then marker = '●' end
+          if M.state.last_target == target then marker = '●' end
           local path = target.path
           if type(path) == 'function' then path = path() end
 
@@ -110,24 +119,32 @@ end
 ---------------------------------------------------------------
 
 function M.continue()
-  -- if we're already debugging, just continue execution.
+  --- continue if debugger already started ---
   if dap.session() then
     dap.continue()
     return
   end
 
-  -- otherwise start a new session.
-  if last_target then
-    local cfg = last_target.configuration
+  --- if user already selected the debugger, then use that ---
+  if M.state.last_target then
+    if M.state.last_target.prepare then M.state.last_target.prepare() end
+
+    local cfg = M.state.last_target.configuration
     if type(cfg) == 'function' then cfg = cfg() end
+
     dap.run(cfg)
     return
   end
 
+  --- first launch ---
   select_target(function(target)
-    last_target = target
+    M.state.last_target = target
+
+    if target.prepare then target.prepare() end
+
     local cfg = target.configuration
     if type(cfg) == 'function' then cfg = cfg() end
+
     dap.run(cfg)
   end)
 end
@@ -146,19 +163,25 @@ function M.executable()
 end
 
 function M.terminate()
-  if dap.session() then dap.terminate() end
+  if dap.session() then
+    dap.terminate()
+  else
+    -- no active DAP session
+    -- still perform cleanup in case a target is running
+    if M.state.last_target and M.state.last_target.cleanup then M.state.last_target.cleanup() end
+  end
 end
 
 function M.select_target()
-  select_target(function(target) last_target = target end)
+  select_target(function(target) M.state.last_target = target end)
 end
 
 function M.select_program()
-  if not last_target then
+  if not M.state.last_target then
     vim.notify('No debugger selected.', vim.log.levels.WARN)
     return
   end
-  last_target.select_program()
+  M.state.last_target.select_program()
 end
 
 return M

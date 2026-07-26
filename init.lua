@@ -596,6 +596,20 @@ require('lazy').setup({
         end,
       })
 
+      --- locate the RISC-V toolchain ---
+      local riscv_gcc = vim.fn.exepath 'riscv32-unknown-elf-gcc'
+
+      local clangd_cmd = {
+        'clangd',
+        '--background-index',
+        '--clang-tidy',
+        '--completion-style=detailed',
+        '--header-insertion=never',
+      }
+
+      --- if the RISC-V toolchain is available, let clangd use it ---
+      if riscv_gcc ~= '' then table.insert(clangd_cmd, '--query-driver=' .. vim.fn.fnamemodify(riscv_gcc, ':h') .. '/riscv32-unknown-elf-*') end
+
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --  See `:help lsp-config` for information about keys and how to configure
@@ -603,17 +617,7 @@ require('lazy').setup({
       local servers = {
         -- C/C++
         clangd = {
-          cmd = {
-            'clangd',
-
-            '--background-index',
-            '--clang-tidy',
-
-            '--completion-style=detailed',
-            '--header-insertion=never',
-
-            '--query-driver=/Users/rudranchakraborty/Documents/02_Local_Projects/opt/riscv32/bin/riscv32-unknown-elf-*',
-          },
+          cmd = clangd_cmd,
         },
         -- Python
         basedpyright = {
