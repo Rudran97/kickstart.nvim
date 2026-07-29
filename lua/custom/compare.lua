@@ -205,7 +205,7 @@ function M.compare_current()
 
   local entries = workspace_entries(current)
 
-  telescope_picker('Compare Current File', entries, function(selection)
+  telescope_picker('Select a File to Compare with the Current File', entries, function(selection)
     if selection == '__browse__' then
       browse_file()
     else
