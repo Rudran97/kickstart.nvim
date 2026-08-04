@@ -321,6 +321,11 @@ require('lazy').setup({
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
         { 'gr', group = 'LSP Actions', mode = { 'n' } },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>d', group = '[D]ebug' },
+        { '<leader>g', group = '[G]it' },
+        { '<leader>=', group = '[=] Compare' },
+        { '<leader>m', group = '[M]arkdown' },
       },
     },
   },
