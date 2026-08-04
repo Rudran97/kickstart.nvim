@@ -95,11 +95,12 @@ Some additional keymaps are as follows:
 
 * File operations
 
-| Keymap            | Description                                |
-| :---              | :---                                       |
-| \<leader\>\<d=\>  | Compare current file with another file.    |
-| \<leader\>mp      | Open Markdown live-preview on the browser. |
-| \<leader\>mt      | Toggle Markdown render inside Neovim.      |
+| Keymap            | Description                                                          |
+| :---              | :---                                                                 |
+| \<leader\>\<=f\>  | Compare current file with another file.                              |
+| \<leader\>\<=d\>  | Compare parent directory of the current file with another directory. |
+| \<leader\>mp      | Open Markdown live-preview on the browser.                           |
+| \<leader\>mt      | Toggle Markdown render inside Neovim.                                |
 
 * Terminal operations
 
