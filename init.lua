@@ -162,6 +162,9 @@ vim.o.inccommand = 'split'
 -- Show which line your cursor is on
 vim.o.cursorline = true
 
+-- Set cursor to block in any mode
+vim.opt.guicursor = 'n-v-i-c:block-Cursor'
+
 -- Minimal number of screen lines to keep above and below the cursor.
 -- Don't declare scrolloff here! Modify inside ./lua/custom/navigation.lua file instead.
 -- vim.o.scrolloff = 10
