@@ -677,6 +677,19 @@ require('lazy').setup({
         -- VHDL
         vhdl_ls = {},
         -- Verilog/SystemVerilog
+        -- veridian = {
+        --   cmd = { 'veridian' },
+        --
+        --   filetypes = {
+        --     'systemverilog',
+        --     'verilog',
+        --   },
+        --
+        --   root_markers = {
+        --     'veridian.yml',
+        --     '.git',
+        --   },
+        -- },
         -- svlangserver = {},
         -- gopls = {},
         -- pyright = {},
@@ -727,12 +740,17 @@ require('lazy').setup({
       --    :Mason
       --
       -- You can press `g?` for help in this menu.
-      local ensure_installed = vim.tbl_keys(servers or {})
+      local ensure_installed = {}
+      for name, _ in pairs(servers) do
+        -- Veridian is installed manually using Cargo, not Mason.
+        if name ~= 'veridian' then table.insert(ensure_installed, name) end
+      end
       vim.list_extend(ensure_installed, {
         -- You can add other tools here that you want Mason to install
       })
-
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-tool-installer').setup {
+        ensure_installed = ensure_installed,
+      }
 
       for name, server in pairs(servers) do
         vim.lsp.config(name, server)
@@ -990,7 +1008,7 @@ require('lazy').setup({
         'c',
         'cpp',
         'python',
-        'systemverilog',
+        -- 'systemverilog',
         'make',
         'diff',
         'lua',
