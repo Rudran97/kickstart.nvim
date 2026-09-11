@@ -31,6 +31,8 @@ This is a fork of the original [kickstart.nvim](https://github.com/nvim-lua/kick
 * Debug
     * Debug environment for C/C++ and python.
     * Virtual inline text after evaluating expressions (require Neovim >= v0.12.x).
+* Multicursor
+    * Code editing with multicursor on word match.
 
 ---
 
@@ -56,6 +58,8 @@ This is a fork of the original [kickstart.nvim](https://github.com/nvim-lua/kick
     ```python
     python -m pip install debugpy
     ```
+* Multicursor
+    * [multicursor](https://github.com/jake-stewart/multicursor.nvim) plugin for multicursor editing.
 
 ---
 
@@ -104,11 +108,11 @@ Some additional keymaps are as follows:
 
 * Terminal operations
 
-| Keymap            | Description                     |
-| :---              | :---                            |
-| \<leader\>\<tt\> | Toggle floating terminal window. |
+| Keymap            | Description                      |
+| :---              | :---                             |
+| \<leader\>\<tt\>  | Toggle floating terminal window. |
 
-* Git
+* Debug
 
 | Keymap         | Description                                            |
 | :---           | :---                                                   |
@@ -122,3 +126,12 @@ Some additional keymaps are as follows:
 | \<leader\>dP   | Select program to debug.                               |
 | \<leader\>dx   | Terminate debug.                                       |
 | \<leader\>dT   | Select target debugger.                                |
+
+* Multicursor
+
+| Keymap       | Description                    |
+| :---         | :---                           |
+| \<C-j\>      | Add cursor on the next match.  |
+| \<C-l\>      | Skip cursor on the next match. |
+| \<leader\>cm | Add cursors on all matches.    |
+| ga           | Add new cursor.                |

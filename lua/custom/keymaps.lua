@@ -4,6 +4,7 @@ local git = require 'custom.git'
 local preview = require 'custom.live-preview'
 local term = require 'custom.terminal'
 local dbg = require 'custom.debugger'
+local mc = require 'multicursor-nvim'
 
 ----------------------------------------------------------------------
 ------------------------------ Explorer ------------------------------
@@ -65,3 +66,12 @@ vim.keymap.set('n', '<leader>dd', dbg.toggle_ui, { desc = 'Debug: Toggle UI' })
 vim.keymap.set('n', '<leader>dP', dbg.select_program, { desc = 'Debug: Select Program' })
 vim.keymap.set('n', '<leader>dx', dbg.terminate, { desc = 'Debug: Terminate' })
 vim.keymap.set('n', '<leader>dT', dbg.select_target, { desc = 'Debug: Select Target Debugger' })
+
+----------------------------------------------------------------------
+----------------------- Multicursor Operations -----------------------
+----------------------------------------------------------------------
+
+vim.keymap.set({ 'n', 'x' }, '<C-j>', function() mc.matchAddCursor(1) end, { desc = 'Multi Cursor: Add Next Match' })
+vim.keymap.set({ 'n', 'x' }, '<C-l>', function() mc.matchSkipCursor(1) end, { desc = 'Multi Cursor: Skip Match' })
+vim.keymap.set({ 'n', 'x' }, '<leader>cm', mc.matchAllAddCursors, { desc = 'Multi [C]ursor [M]atch' })
+vim.keymap.set({ 'n', 'x' }, 'ga', mc.addCursorOperator, { desc = 'Multi Cursor Operator' })

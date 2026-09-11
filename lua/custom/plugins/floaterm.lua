@@ -7,8 +7,8 @@ return {
     border = true,
     autoinsert = true,
     size = {
-      h = 70,
-      w = 80,
+      h = 85,
+      w = 95,
     },
     -- to use, make this func(buf)
     mappings = {
