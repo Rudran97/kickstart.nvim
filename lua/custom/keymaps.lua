@@ -71,7 +71,7 @@ vim.keymap.set('n', '<leader>dT', dbg.select_target, { desc = 'Debug: Select Tar
 ----------------------- Multicursor Operations -----------------------
 ----------------------------------------------------------------------
 
-vim.keymap.set({ 'n', 'x' }, '<C-j>', function() mc.matchAddCursor(1) end, { desc = 'Multi Cursor: Add Next Match' })
-vim.keymap.set({ 'n', 'x' }, '<C-l>', function() mc.matchSkipCursor(1) end, { desc = 'Multi Cursor: Skip Match' })
+vim.keymap.set({ 'n', 'x' }, '<C-J>', function() mc.matchAddCursor(1) end, { desc = 'Multi Cursor: Add Next Match' })
+vim.keymap.set({ 'n', 'x' }, '<C-s>', function() mc.matchSkipCursor(1) end, { desc = 'Multi Cursor: Skip Match' })
 vim.keymap.set({ 'n', 'x' }, '<leader>cm', mc.matchAllAddCursors, { desc = 'Multi [C]ursor [M]atch' })
 vim.keymap.set({ 'n', 'x' }, 'ga', mc.addCursorOperator, { desc = 'Multi Cursor Operator' })

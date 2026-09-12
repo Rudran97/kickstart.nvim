@@ -131,7 +131,7 @@ Some additional keymaps are as follows:
 
 | Keymap       | Description                    |
 | :---         | :---                           |
-| \<C-j\>      | Add cursor on the next match.  |
-| \<C-l\>      | Skip cursor on the next match. |
+| \<C-J\>      | Add cursor on the next match.  |
+| \<C-s\>      | Skip cursor on the next match. |
 | \<leader\>cm | Add cursors on all matches.    |
 | ga           | Add new cursor.                |
