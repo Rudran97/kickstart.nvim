@@ -75,3 +75,5 @@ vim.keymap.set({ 'n', 'x' }, '<C-J>', function() mc.matchAddCursor(1) end, { des
 vim.keymap.set({ 'n', 'x' }, '<C-s>', function() mc.matchSkipCursor(1) end, { desc = 'Multi Cursor: Skip Match' })
 vim.keymap.set({ 'n', 'x' }, '<leader>cm', mc.matchAllAddCursors, { desc = 'Multi [C]ursor [M]atch' })
 vim.keymap.set({ 'n', 'x' }, 'ga', mc.addCursorOperator, { desc = 'Multi Cursor Operator' })
+vim.keymap.set({ 'n', 'x' }, 'g<c-a>', mc.sequenceIncrement)
+vim.keymap.set({ 'n', 'x' }, 'g<c-x>', mc.sequenceDecrement)
