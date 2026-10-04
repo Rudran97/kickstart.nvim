@@ -1035,7 +1035,9 @@ require('lazy').setup({
         -- vim.wo.foldmethod = 'expr'
 
         -- enables treesitter based indentation
-        if language ~= 'vhdl' then vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end
+        if language ~= 'vhdl' and language ~= 'verilog' and language ~= 'systemverilog' then
+          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
       end
 
       local available_parsers = require('nvim-treesitter').get_available()

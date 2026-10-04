@@ -209,7 +209,7 @@ function M.graph()
 
   require('gitgraph').draw({}, {
     all = true,
-    max_count = 5000,
+    max_count = 20000,
   })
 
   vim.schedule(
